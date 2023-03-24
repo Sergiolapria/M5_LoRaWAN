@@ -19,10 +19,11 @@ void loop() {
   bool IO1=digitalRead(2);
   bool IO2=digitalRead(5);
   if(IO1&&IO2==true){
-    myttn.sendboolean(true);
-    //Serial.println(IO1&&IO2);
+    myttn.send2ttn(0,48,0);//IO1=true
+    myttn.send2ttn(0,50,0);//IO2=true
   }else{
     Serial.println("Todo bien");
-    myttn.send2ttn(1,23,3);
+    myttn.send2ttn(0,49,0);//IO1=false
+    myttn.send2ttn(0,51,0);//IO2=false
   }
   }
