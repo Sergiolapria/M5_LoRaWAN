@@ -58,14 +58,15 @@ void ttn::sendboolean(bool result){
   ttn::sendHex("AA");
 
 }
-void ttn::send2ttn(int channel, float magnitude,float threshold){
+void ttn::send2ttn(int channel, float magnitude,int threshold){
   //activate communication
   //ttn::loraset("?");
   //ATCommand("LoraSet","1");
   delay(300);
   uint16_t magnitude2ttn=100*magnitude;
+  
 
-  byte payload[6];
+  byte payload[8];
   payload[0]=channel;
   payload[1]=channel>>8;
   payload[2]=channel>>16;
@@ -74,16 +75,14 @@ void ttn::send2ttn(int channel, float magnitude,float threshold){
   payload[4]=magnitude2ttn>>8;
   payload[5]=magnitude2ttn>>16;
 
-  //payload[12]=ppm2ttn>>32;
-  //DEBUG
-  Serial.print(payload[9]);
-  Serial.print(payload[10]);
-  Serial.println(payload[11]);
+  //payload[6]=threshold;
+  //payload[7]=threshold>>8;
+
   
   Serial.print(F("[X] actual TTN payload is------>"));
   char str[48]="";
   array2string(payload,6,str);
-  
+  Serial.print("STR:");
   Serial.println(str);
   //Now send all to TTN
   //ATCommand("SendHex",str);

@@ -4,7 +4,7 @@
 class ttn{
   public:
     ttn(uint8_t rxpin,uint8_t txpin);
-    void send2ttn(int channel,float magnitude,float threshold);
+    void send2ttn(int channel,float magnitude,int threshold);
     void sendboolean(bool result);
     void loraset(char dat[]);
     void sendHex(char str[]);
