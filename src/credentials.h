@@ -1,7 +1,7 @@
 //
-char DevEui[]="70B3D57ED0057334";
+char DevEui[]="X";
 //
-char AppEui[]="CDFABADDADADADAD";
+char AppEui[]="x";
 //
-char AppKey[]="58B82B402BF2105D891D5FD8235F5A75";
+char AppKey[]="x";
 

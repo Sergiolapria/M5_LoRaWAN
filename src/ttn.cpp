@@ -60,24 +60,19 @@ void ttn::sendboolean(bool result){
 }
 void ttn::send2ttn(int channel, float magnitude,int threshold){
   //activate communication
-  //ttn::loraset("?");
+  ttn::loraset("?");
   //ATCommand("LoraSet","1");
   delay(300);
-  uint16_t magnitude2ttn=100*magnitude;
-  
+  uint16_t magnitude2ttn=magnitude;
+  Serial.print("magnitude:");
+  Serial.println(magnitude2ttn);
 
-  byte payload[8];
-  payload[0]=channel;
-  payload[1]=channel>>8;
-  payload[2]=channel>>16;
-
-  payload[3]=magnitude2ttn;
-  payload[4]=magnitude2ttn>>8;
-  payload[5]=magnitude2ttn>>16;
-
-  //payload[6]=threshold;
-  //payload[7]=threshold>>8;
-
+  byte payload[5];
+  payload[0]=highByte(channel);
+  payload[1]=lowByte(channel);
+  payload[2]=(magnitude2ttn);
+  payload[3]=(magnitude2ttn>>8);
+  payload[4]=(magnitude2ttn>>16);
   
   Serial.print(F("[X] actual TTN payload is------>"));
   char str[48]="";
