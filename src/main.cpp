@@ -32,6 +32,8 @@ void loop() {
   //Leer entradas
   bool IO1=digitalRead(2);
   bool IO2=digitalRead(5);
+  M5.Lcd.fillScreen(RED);
+  M5.Lcd.setCursor(0,35,4);
   M5.Lcd.println("Status:");
   M5.Lcd.println(IO1);
   M5.Lcd.println(IO2);
@@ -43,6 +45,6 @@ void loop() {
     Serial.println("Todo bien");
     //myttn.send2ttn(0,49,0);//IO1=false
     delay(250);
-    myttn.send2ttn(1,110,0);//IO2=false
+    myttn.send2ttn(1,51,0);//IO2=false
   }
   }
