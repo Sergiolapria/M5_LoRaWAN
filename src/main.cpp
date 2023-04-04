@@ -22,7 +22,23 @@ void button_Menu(){
     WAN_option=3;
   }
 }
-
+void WAN_connection(){
+  if(WAN_option==1){
+    myttn.DevEUI(DevEui);
+    myttn.AppEui(AppEui);
+    myttn.AppKey(AppKey);
+    myttn.Join();
+  }
+  else if(WAN_option==2){
+    myttn.DevEUI(DevEui);
+    myttn.AppEui(AppEui);
+    myttn.AppKey(AppKey);
+    myttn.Join();
+  }
+  else{
+    M5.Lcd.clear(BLACK);
+  }
+}
 void setup() {
   M5.begin();
   M5.Power.begin();
