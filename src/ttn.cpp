@@ -64,19 +64,23 @@ void ttn::send2ttn(int channel, float magnitude,int threshold){
   //ATCommand("LoraSet","1");
   delay(300);
   uint16_t magnitude2ttn=magnitude;
+  uint16_t distance2ttn=threshold;
   Serial.print("magnitude:");
   Serial.println(magnitude2ttn);
 
-  byte payload[5];
+  byte payload[8];
   payload[0]=highByte(channel);
   payload[1]=lowByte(channel);
   payload[2]=(magnitude2ttn);
   payload[3]=(magnitude2ttn>>8);
   payload[4]=(magnitude2ttn>>16);
+  payload[5]=(distance2ttn);
+  payload[6]=(distance2ttn>>8);
+  payload[7]=(distance2ttn>>16);
   
   Serial.print(F("[X] actual TTN payload is------>"));
   char str[48]="";
-  array2string(payload,6,str);
+  array2string(payload,8,str);
   Serial.print("STR:");
   Serial.println(str);
   //Now send all to TTN

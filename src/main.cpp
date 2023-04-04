@@ -3,10 +3,13 @@
 #include "credentials.h"
 #include "M5Stack.h"
 #include "config.h"
+#include "Adafruit_VL53L0X.h"
 
 int WAN_option=0;
-
+int distance=0;
 ttn myttn(16,17);
+Adafruit_VL53L0X vl=Adafruit_VL53L0X();
+
 void button_Menu(){
   M5.update();
   if(M5.BtnA.wasReleased()||M5.BtnA.pressedFor(1000,200)){
@@ -24,15 +27,15 @@ void button_Menu(){
 }
 void WAN_connection(){
   if(WAN_option==1){
-    myttn.DevEUI(DevEui);
-    myttn.AppEui(AppEui);
-    myttn.AppKey(AppKey);
+    myttn.DevEUI(DevEuiHELIUM);
+    myttn.AppEui(AppEuiHELIUM);
+    myttn.AppKey(AppKeyHELIUM);
     myttn.Join();
   }
   else if(WAN_option==2){
-    myttn.DevEUI(DevEui);
-    myttn.AppEui(AppEui);
-    myttn.AppKey(AppKey);
+    myttn.DevEUI(DevEuiTTN);
+    myttn.AppEui(AppEuiTTN);
+    myttn.AppKey(AppKeyTTN);
     myttn.Join();
   }
   else{
@@ -58,14 +61,17 @@ void setup() {
   ///////////////////////
   Serial.begin(115200);
   //////////////////////
-
+  if(!vl.begin()){
+    M5.Lcd.println("LASER OK");
+    while(1);
+  }
+  //Start to read
+  vl.startRangeContinuous();
   //CALIBRATE THE SENSOR
 
-  //Config LoRaWAN
-  myttn.DevEUI(DevEui);
-  myttn.AppEui(AppEui);
-  myttn.AppKey(AppKey);
-  myttn.Join();
+  if(M5.BtnA.wasReleased()||M5.BtnB.wasReleased()||M5.BtnC.wasReleased()){
+    WAN_connection();
+  }
   pinMode(2,INPUT);
   pinMode(5,INPUT);
 }
@@ -74,6 +80,11 @@ void loop() {
   //Leer entradas
   bool IO1=digitalRead(2);
   bool IO2=digitalRead(5);
+  //READ SENSOR
+  if(vl.isRangeComplete()){ 
+    distance=vl.readRange();
+  }
+  
   M5.Lcd.fillScreen(RED);
   M5.Lcd.setCursor(0,35,4);
   M5.Lcd.println("Status:");
@@ -82,12 +93,12 @@ void loop() {
   if(IO1&&IO2==true){
     //myttn.send2ttn(0,48,0);//IO1=true
     delay(250);
-    myttn.send2ttn(1,50,0);//IO2=true
+    myttn.send2ttn(1,50,distance);//IO2=true
   }else{
     Serial.println("Todo bien");
     //myttn.send2ttn(0,49,0);//IO1=false
     delay(250);
-    myttn.send2ttn(1,51,0);//IO2=false
+    myttn.send2ttn(1,51,distance);//IO2=false
   }
 
   }
