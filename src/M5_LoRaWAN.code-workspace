@@ -3,6 +3,10 @@
 		{
 			"name": "M5_LoRaWAN",
 			"path": ".."
+		},
+		{
+			"name": "INNOVACION",
+			"path": "../../INNOVACION"
 		}
 	],
 	"settings": {}
