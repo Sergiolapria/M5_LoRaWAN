@@ -54,9 +54,7 @@ void setup() {
   M5.Lcd.println("PAPER FOR BULL_IoT");
   M5.Lcd.println("By SergioPria");
   //INIT MENU
-  M5.Lcd.println("If you want use Helium, please pulse A:");
-  M5.Lcd.println("If you want use TTN,please pulse B:");
-  M5.Lcd.println("If you want clear the screen, please pulse C");
+
   //CALL A FUNCTION
   ///////////////////////
   Serial.begin(115200);
@@ -69,14 +67,20 @@ void setup() {
   vl.startRangeContinuous();
   //CALIBRATE THE SENSOR
 
-  if(M5.BtnA.wasReleased()||M5.BtnB.wasReleased()||M5.BtnC.wasReleased()){
-    WAN_connection();
-  }
+
   pinMode(2,INPUT);
   pinMode(5,INPUT);
 }
 
 void loop() {
+  ///INIT MENU
+  M5.Lcd.println("If you want use Helium, please pulse A:");
+  M5.Lcd.println("If you want use TTN,please pulse B:");
+  M5.Lcd.println("If you want clear the screen, please pulse C");
+  if(M5.BtnA.wasReleased()||M5.BtnB.wasReleased()||M5.BtnC.wasReleased()){
+    button_Menu();
+    WAN_connection();
+  }
   //Leer entradas
   bool IO1=digitalRead(2);
   bool IO2=digitalRead(5);
