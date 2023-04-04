@@ -60,7 +60,7 @@ void ttn::sendboolean(bool result){
 }
 void ttn::send2ttn(int channel, float magnitude,int threshold){
   //activate communication
-  ttn::loraset("?");
+  //ttn::loraset("?");
   //ATCommand("LoraSet","1");
   delay(300);
   uint16_t magnitude2ttn=magnitude;

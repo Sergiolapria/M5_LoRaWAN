@@ -3,6 +3,9 @@
 #include "credentials.h"
 #include "M5Stack.h"
 #include "config.h"
+#include <sensors.h>
+
+
 
 ttn myttn(16,17);
 
@@ -19,6 +22,10 @@ void setup() {
   M5.Lcd.println("By SergioPria");
   ///////////////////////
   Serial.begin(115200);
+  //////////////////////
+
+  //CALIBRATE THE SENSOR
+
   //Config LoRaWAN
   myttn.DevEUI(DevEui);
   myttn.AppEui(AppEui);
@@ -47,4 +54,5 @@ void loop() {
     delay(250);
     myttn.send2ttn(1,51,0);//IO2=false
   }
+
   }
