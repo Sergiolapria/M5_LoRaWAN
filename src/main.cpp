@@ -8,13 +8,9 @@
 #include "Adafruit_BME680.h"
 #define SEALEVELPRESSURE_HPA (1013.25)
 Adafruit_BME680 bme;//i2c
-
-
 int WAN_option=0;
 int distance=0;
 ttn myttn(16,17);
-
-
 void sensor_init(){
   if(!bme.begin()){
     Serial.println(F("No se encuentra el sensor"));
@@ -69,10 +65,7 @@ void setup() {
   myttn.AppKey(AppKeyTTN);
   myttn.Join();
 }
-
 void loop() {
-
-
   //READ SENSOR
    unsigned long endTime = bme.beginReading();
   if (endTime == 0) {
