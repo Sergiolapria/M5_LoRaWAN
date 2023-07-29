@@ -3,6 +3,11 @@
 #include "credentials.h"
 #include "M5Stack.h"
 #include "config.h"
+#include "Wire.h"
+#include <Adafruit_Sensor.h>
+#include "Adafruit_BME680.h"
+#define SEALEVELPRESSURE_HPA (1013.25)
+Adafruit_BME680 bme;//i2c
 
 
 int WAN_option=0;
@@ -10,20 +15,17 @@ int distance=0;
 ttn myttn(16,17);
 
 
-void button_Menu(){
-  M5.update();
-  if(M5.BtnA.wasReleased()||M5.BtnA.pressedFor(1000,200)){
-    M5.Lcd.println("You prefer Helium");
-    WAN_option=1;
+void sensor_init(){
+  if(!bme.begin()){
+    Serial.println(F("No se encuentra el sensor"));
+    while(1);
   }
-  if(M5.BtnB.wasReleased()||M5.BtnA.pressedFor(1000,200)){
-    M5.Lcd.println("You prefer TTN");
-    WAN_option=1;
-  }
-  if(M5.BtnC.wasReleased()||M5.BtnA.pressedFor(1000,200)){
-    M5.Lcd.println("RESET");
-    WAN_option=3;
-  }
+  //setup
+  bme.setTemperatureOversampling(BME680_OS_8X);
+  bme.setHumidityOversampling(BME680_OS_2X);
+  bme.setPressureOversampling(BME680_OS_4X);
+  bme.setIIRFilterSize(BME680_FILTER_SIZE_3);
+  bme.setGasHeater(320, 150); // 320*C for 150 ms
 }
 void WAN_connection(){
   if(WAN_option==1){
@@ -53,6 +55,7 @@ void setup() {
   M5.Lcd.setTextSize(1);
   M5.Lcd.println("PAPER FOR BULL_IoT");
   M5.Lcd.println("By SergioPria");
+  sensor_init();
   //INIT MENU
 
   //CALL A FUNCTION
@@ -61,37 +64,35 @@ void setup() {
 
   pinMode(2,INPUT);
   pinMode(5,INPUT);
+  myttn.DevEUI(DevEuiTTN);
+  myttn.AppEui(AppEuiTTN);
+  myttn.AppKey(AppKeyTTN);
+  myttn.Join();
 }
 
 void loop() {
-  ///INIT MENU
-  M5.Lcd.println("If you want use Helium, please pulse A:");
-  M5.Lcd.println("If you want use TTN,please pulse B:");
-  M5.Lcd.println("If you want clear the screen, please pulse C");
-  if(M5.BtnA.wasReleased()||M5.BtnB.wasReleased()||M5.BtnC.wasReleased()){
-    button_Menu();
-    WAN_connection();
-  }
-  //Leer entradas
-  bool IO1=digitalRead(2);
-  bool IO2=digitalRead(5);
-  //READ SENSOR
 
-  
+
+  //READ SENSOR
+   unsigned long endTime = bme.beginReading();
+  if (endTime == 0) {
+    Serial.println(F("Failed to begin reading :("));
+    return;
+  }
+  Serial.print(F("Reading started at "));
+  Serial.print(millis());
+  Serial.print(F(" and will finish at "));
+  Serial.println(endTime);
+    if (!bme.endReading()) {
+    Serial.println(F("Failed to complete reading :("));
+    return;
+  }
+  int temperature=100*bme.temperature;
+  Serial.println(bme.temperature);
   M5.Lcd.fillScreen(RED);
   M5.Lcd.setCursor(0,35,4);
-  M5.Lcd.println("Status:");
-  M5.Lcd.println(IO1);
-  M5.Lcd.println(IO2);
-  if(IO1&&IO2==true){
-    //myttn.send2ttn(0,48,0);//IO1=true
-    delay(250);
-    myttn.send2ttn(1,50,distance);//IO2=true
-  }else{
-    Serial.println("Todo bien");
-    //myttn.send2ttn(0,49,0);//IO1=false
-    delay(250);
-    myttn.send2ttn(1,51,distance);//IO2=false
-  }
-
-  }
+  M5.Lcd.print("Temp: ");
+  M5.Lcd.println(bme.temperature);
+  delay(250);
+  myttn.send2ttn(1,temperature,1);
+}
