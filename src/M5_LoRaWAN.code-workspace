@@ -1,12 +1,8 @@
 {
 	"folders": [
 		{
-			"name": "M5_LoRaWAN",
-			"path": ".."
-		},
-		{
-			"name": "INNOVACION",
-			"path": "../../INNOVACION"
+			"name": "SA_Tecnologia_4_UD9",
+			"path": "../../SA_Tecnologia_4_UD9"
 		}
 	],
 	"settings": {}

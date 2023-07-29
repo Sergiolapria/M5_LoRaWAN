@@ -3,12 +3,12 @@
 #include "credentials.h"
 #include "M5Stack.h"
 #include "config.h"
-#include "Adafruit_VL53L0X.h"
+
 
 int WAN_option=0;
 int distance=0;
 ttn myttn(16,17);
-Adafruit_VL53L0X vl=Adafruit_VL53L0X();
+
 
 void button_Menu(){
   M5.update();
@@ -58,15 +58,6 @@ void setup() {
   //CALL A FUNCTION
   ///////////////////////
   Serial.begin(115200);
-  //////////////////////
-  if(!vl.begin()){
-    M5.Lcd.println("LASER OK");
-    while(1);
-  }
-  //Start to read
-  vl.startRangeContinuous();
-  //CALIBRATE THE SENSOR
-
 
   pinMode(2,INPUT);
   pinMode(5,INPUT);
@@ -85,9 +76,7 @@ void loop() {
   bool IO1=digitalRead(2);
   bool IO2=digitalRead(5);
   //READ SENSOR
-  if(vl.isRangeComplete()){ 
-    distance=vl.readRange();
-  }
+
   
   M5.Lcd.fillScreen(RED);
   M5.Lcd.setCursor(0,35,4);
